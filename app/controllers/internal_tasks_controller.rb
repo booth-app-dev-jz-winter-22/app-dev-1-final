@@ -20,7 +20,11 @@ class InternalTasksController < ApplicationController
   def create
     the_internal_task = InternalTask.new
     the_internal_task.engagement_id = params.fetch("query_engagement_id")
-    the_internal_task.client_id = params.fetch("query_client_id")
+    @matching_engagement = Engagement.where ({:id => the_internal_task.engagement_id})
+    @the_engagement = @matching_engagement.at(0)
+    @matching_client = Client.where({:id => @the_engagement.client_id})
+    @the_client = @matching_client.at(0)
+    the_internal_task.client_id = @the_client.id
     the_internal_task.task_name = params.fetch("query_task_name")
     the_internal_task.task_detail = params.fetch("query_task_detail")
 
